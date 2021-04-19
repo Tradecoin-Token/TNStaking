@@ -92,11 +92,7 @@
             var panel2ResponseObject = await fetch("https://tnnode.turtlenetwork.eu/assets/balance/3JxoLH2YzWGzs9SrjRTo35NS5sgSk3Xm947/9bc4JdiFHcohsYFseJZ2zZEBPRLhHvKowVY1ZcwR25vm");
             panel2Data = await panel2ResponseObject.json();
             document.getElementById("panel2").innerHTML = 'Non Circulated Supply<br>'+(panel2Data.balance).toFixed(2);
-
-            var panel3ResponseObject = await fetch("https://tnnode.turtlenetwork.eu/addresses/data/tnnode.turtlenetwork.eu?key=Total_Loan_Paid%3A");
-            panel3Data = await panel3ResponseObject.json();
-            document.getElementById("panel3").innerHTML = 'Total Loan Paid<br>'+panel3Data[0].value+' TN';
-
+		
             var panel4ResponseObject = await fetch("https://tnnode.turtlenetwork.eu/blocks/height");
             panel4Data = await panel4ResponseObject.json();
             document.getElementById("panel4").innerHTML = 'Block Height<br>'+panel4Data.height;
@@ -134,7 +130,7 @@
                     if(item.key.includes('Deposit_Height_Of')){
                         searchResult[thisIndex].BorrowHeight = item.value;
                     }
-                    if(item.key.includes('otal_Tokens_Locked:')){
+                    if(item.key.includes('Total_Tokens_Locked:')){
                         searchResult[thisIndex].TotalLoanBlocks = item.value;
                     }
                 }
