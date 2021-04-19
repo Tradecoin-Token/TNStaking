@@ -49,20 +49,6 @@
             </div>
         </div>
 
-        
-        <div class="mx-auto p-md-5 p-4 rounded-lg text-white" style="background-color: #ff007f; max-width: 450px;">
-            <h4 class="text-center mb-4">Tradecoin Loan DApp Calculator</h4>
-            Enter Your TN Amount for Collateral:
-            <input type="number" id="amount" onchange="Calculate()" class="form-control no-focus p-3"><br>
-            Staking Rate Per Day for 1000 TN:
-            <input id="rate" type="text" value="0.9792 TN" class="form-control no-focus p-3" readonly><br>
-            Loan Period (1-90 Days):
-            <input id="days" type="number" min="2" max="90" class="form-control no-focus p-3" onchange="Calculate()"><br>
-            <h4 id="total"></h4>
-            <button class="btn btn-success w-100 py-3" onclick="Calculate()">Calculate</button><br><br>
-            <button class="btn btn-success w-100 py-3" onclick="location.href='https://tradecointoken.com';">Proceed For Staking	</button>
-        </div>
-
         <div class="container-fluid mx-auto py-5 px-lg-5">
             <div class="row">
                 <div class="col-md-9 pb-3">
@@ -231,17 +217,6 @@
             resultArea.innerHTML = output;
         }
 
-        function Calculate() {
-        	const amount = document.querySelector("#amount").value;
-        	const rate = document.querySelector("#rate").value;
-        	const days = document.querySelector("#days").value;
-        	const oneday = 1440
-        	const totalloanblocks = 1440*days
-        	const perblockinterest = 0.00000068
-        	const interest = (perblockinterest*totalloanblocks)*amount;
-        	const totalinterest = interest.toFixed(6);
-        	document.querySelector("#total").innerHTML = "Total Interest(TN): " + totalinterest;		
-        }
 		function exportTableToCSV(filename) {
 			var csv = [];
 			var rows = document.querySelectorAll("table tr");
