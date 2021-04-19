@@ -130,9 +130,6 @@
                     if(item.key.includes('Deposit_Height_Of')){
                         searchResult[thisIndex].BorrowHeight = item.value;
                     }
-                    if(item.key.includes('Total_Tokens_Locked:')){
-                        searchResult[thisIndex].TotalLoanBlocks = item.value;
-                    }
                 }
             });
 
@@ -186,11 +183,6 @@
                         output += '<td>N&#47;A</td>';
                     }else{
                         output += '<td>'+searchResult[index].BorrowHeight+'</td>';
-                    }
-                    if(searchResult[index].TotalLoanBlocks === undefined || String(searchResult[index].TotalLoanBlocks).length < 1){
-                        output += '<td>N&#47;A</td>';
-                    }else{
-                        output += '<td>'+searchResult[index].TotalLoanBlocks+'</td>';
                     }
                     var Indicator = parseInt((searchResult[index].BorrowHeight + searchResult[index].TotalLoanBlocks) - blockHeight);
                     output += '<td>';
