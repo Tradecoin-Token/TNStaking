@@ -52,15 +52,15 @@
         
         <div class="mx-auto p-md-5 p-4 rounded-lg text-white" style="background-color: #ff007f; max-width: 450px;">
             <h4 class="text-center mb-4">Tradecoin Loan DApp Calculator</h4>
-            Enter Your WAVES Amount for Collateral:
+            Enter Your TN Amount for Collateral:
             <input type="number" id="amount" onchange="Calculate()" class="form-control no-focus p-3"><br>
             Staking Rate Per Day for 1000 TN:
-            <input id="rate" type="text" value="0.9792 WAVES" class="form-control no-focus p-3" readonly><br>
+            <input id="rate" type="text" value="0.9792 TN" class="form-control no-focus p-3" readonly><br>
             Loan Period (1-90 Days):
             <input id="days" type="number" min="2" max="90" class="form-control no-focus p-3" onchange="Calculate()"><br>
             <h4 id="total"></h4>
             <button class="btn btn-success w-100 py-3" onclick="Calculate()">Calculate</button><br><br>
-            <button class="btn btn-success w-100 py-3" onclick="location.href='https://tradecointoken.com';">Proceed For Loan	</button>
+            <button class="btn btn-success w-100 py-3" onclick="location.href='https://tradecointoken.com';">Proceed For Staking	</button>
         </div>
 
         <div class="container-fluid mx-auto py-5 px-lg-5">
@@ -145,14 +145,8 @@
                         searchResult.push({Address:thisKey});
                     }
                     var thisIndex = allIndex.indexOf(thisKey);
-                    if(item.key.includes('Borrow_height')){
+                    if(item.key.includes('Deposit_Height_Of')){
                         searchResult[thisIndex].BorrowHeight = item.value;
-                    }
-                    if(item.key.includes('Collateral_Amount')){
-                        searchResult[thisIndex].CollateralAmount = item.value;
-                    }
-                    if(item.key.includes('Loan_Amount')){
-                        searchResult[thisIndex].LoanAmount = item.value;
                     }
                     if(item.key.includes('Loan_Interest')){
                         searchResult[thisIndex].LoanInterest = item.value;
