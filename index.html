@@ -61,8 +61,8 @@
                     <div class="form-group rounded position-relative border p-1">
                         <label class="small ml-3 mt-n3 px-2 position-absolute bg-white">Sort By</label>
                         <select class="custom-select no-focus border-0 pl-3" onchange="sortData(this.value);">
-                            <option value="0" selected>Loan Amount (Hight to Low)</option>
-                            <option value="1">Loan Amount (Low to Hight)</option>
+                            <option value="0" selected>Staking Amount (High to Low)</option>
+                            <option value="1">Staking Amount (Low to High)</option>
                             <option value="2">Address (A-Z)</option>
                             <option value="3">Address (Z-A)</option>
                         </select>
@@ -74,7 +74,7 @@
     </div>
     <script>
         const APIURL = "https://tnnode.turtlenetwork.eu/addresses/data/3JtkADHxVB7jSSkhhg4Hjta1kHjEkfwKYSx";
-        var loanData = '';
+        var StakingData = '';
         var loading = document.getElementById("loading");
         var mainArea = document.getElementById("mainArea");
         var resultArea = document.getElementById("resultArea");
@@ -83,38 +83,38 @@
         var blockHeight;
         window.onload = async function(){
             var responseObject = await fetch(APIURL);
-            loanData = await responseObject.json();
+            StakingData = await responseObject.json();
 
             var panel1ResponseObject = await fetch("https://tnnode.turtlenetwork.eu/addresses/data/3JtkADHxVB7jSSkhhg4Hjta1kHjEkfwKYSx/Total_Tokens_Locked%3A");
             panel1Data = await panel1ResponseObject.json();
-            document.getElementById("panel1").innerHTML = 'Total TRD Under Staking<br>'+panel1Data[0].value+'%';
+            document.getElementById("panel1").innerHTML = 'Total TRD Under Staking<br>'+panel1Data.value;
 
             var panel2ResponseObject = await fetch("https://tnnode.turtlenetwork.eu/assets/balance/3JxoLH2YzWGzs9SrjRTo35NS5sgSk3Xm947/9bc4JdiFHcohsYFseJZ2zZEBPRLhHvKowVY1ZcwR25vm");
             panel2Data = await panel2ResponseObject.json();
             document.getElementById("panel2").innerHTML = 'Non Circulated Supply<br>'+(panel2Data.balance).toFixed(2);
 		
-            var panel4ResponseObject = await fetch("https://tnnode.turtlenetwork.eu/blocks/height");
-            panel4Data = await panel4ResponseObject.json();
-            document.getElementById("panel4").innerHTML = 'Block Height<br>'+panel4Data.height;
-            blockHeight = panel4Data.height;
+            var panel3ResponseObject = await fetch("https://tnnode.turtlenetwork.eu/blocks/height");
+            panel3Data = await panel3ResponseObject.json();
+            document.getElementById("panel3").innerHTML = 'Block &#9939; Height<br>'+panel3Data.height;
+            blockHeight = panel3Data.height;
 
             loading.remove();
             mainArea.classList.remove('d-none');
-            showData(loanData, sortRule);
+            showData(StakingData, sortRule);
         }
 
         function search(value){
             address = value.trim();
-            showData(loanData, sortRule);
+            showData(StakingData, sortRule);
         }
 
         function sortData(value){
             sortRule = value;
-            showData(loanData, sortData);
+            showData(StakingData, sortData);
         }
 
-        function showData(loanData, sort){
-            var data = loanData;
+        function showData(StakingData, sort){
+            var data = StakingData;
             var output = '';
             var allIndex = [];
             var searchResult = [];
@@ -127,27 +127,33 @@
                         searchResult.push({Address:thisKey});
                     }
                     var thisIndex = allIndex.indexOf(thisKey);
-                    if(item.key.includes('Deposit_Height_Of')){
-                        searchResult[thisIndex].BorrowHeight = item.value;
+                    if(item.key.includes('Deposit_Height')){
+                        searchResult[thisIndex].DepositHeight = item.value;
                     }
+                    if(item.key.includes('Deposit_Amount')){
+                        searchResult[thisIndex].DepositAmount = item.value;
+                    }
+                    
+                    
+                
                 }
             });
 
             if(searchResult.length > 0){
                 searchResult.forEach(function(item, index){
-                    if(searchResult[index].LoanAmount === undefined){
+                    if(searchResult[index].DepositAmount === undefined){
                         delete searchResult[index];
                     }
                 });
 
                 if(sortRule == 0){
                     searchResult.sort(function (a, b) {
-                        return parseFloat(a.LoanAmount) - parseFloat(b.LoanAmount);
+                        return parseFloat(a.DepositAmount) - parseFloat(b.DepositAmount);
                     });
                     searchResult =  searchResult.reverse();
                 }else if(sortRule == 1){
                     searchResult.sort(function (a, b) {
-                        return parseFloat(a.LoanAmount) - parseFloat(b.LoanAmount);
+                        return parseFloat(a.DepositAmount) - parseFloat(b.DepositAmount);
                     });
                 }else if(sortRule == 2){
                     searchResult.sort(function (a, b) {
@@ -165,32 +171,43 @@
                 output += '<thead class="text-white" style="background-color: #ff007f">';
                 output += '<tr>';
                 output += '<th>Address</th>';
-                output += '<th>Borrow Height</th>';
-                output += '<th>Collateral Amount</th>';
-                output += '<th>Loan Amount</th>';
-                output += '<th>Loan Interest</th>';
-                output += '<th>Loan Status</th>';
-                output += '<th>Total Loan Blocks</th>';
+                output += '<th>Deposit Height</th>';
+                output += '<th>Staking Amount</th>';
+                output += '<th>Staking Reward</th>';
                 output += '<th>Indicator</th>';
-				output += '<th>Balance Hours</th>';
+				output += '<th>Running APY</th>';
                 output += '</tr>';
                 output += '</thead>';
                 output += '<tbody>';
                 searchResult.forEach(function(item, index){
                     output += '<tr style="cursor:pointer;">';
                     output += '<td>'+searchResult[index].Address+'</td>';
-                    if(searchResult[index].BorrowHeight === undefined || String(searchResult[index].BorrowHeight).length < 1){
+                    if(searchResult[index].DepositHeight === undefined || String(searchResult[index].DepositHeight).length < 1){
                         output += '<td>N&#47;A</td>';
                     }else{
-                        output += '<td>'+searchResult[index].BorrowHeight+'</td>';
+                        output += '<td>'+searchResult[index].DepositHeight+'</td>';
                     }
-                    var Indicator = parseInt((searchResult[index].BorrowHeight + searchResult[index].TotalLoanBlocks) - blockHeight);
+                    if(searchResult[index].DepositAmount === undefined || String(searchResult[index].DepositAmount).length < 1){
+                        output += '<td>N&#47;A</td>';
+                    }else{
+                        output += '<td>'+searchResult[index].DepositAmount+'</td>';
+                    }                    
+                                        
+                    var Indicator = parseInt((searchResult[index].DepositAmount));
                     output += '<td>';
                         if(Indicator > 0){
-                            output += '<span class="bg-success px-2 py-1 w-100 small rounded text-white">Loan Running</span>'+" "+'<td>'+(Indicator/60).toFixed(2)+" Hrs";
+                        let Fixedinterest = 2000
+                        let diff = parseInt(blockHeight-(searchResult[index].DepositHeight));
+                        let InflationRatePerBlk = 1
+                        let CummulativeRewards  = Fixedinterest+((diff * InflationRatePerBlk) / 1440)
+                        
+                            output += '<span class="bg-success px-2 py-1 w-100 small rounded text-white">Staking Running</span>'+" "+'<td>'+(((diff*searchResult[index].DepositAmount*CummulativeRewards)/1440)/100000000).toFixed(8)+" TN";
                         }else{
-                            output += '<span class="bg-danger px-2 py-1 w-100 small rounded text-white">Loan Expired</span>';
+                            output += '<span class="bg-danger px-2 py-1 w-100 small rounded text-white">Withdraw Completed</span>';
                         }
+                        
+                        
+                        
                     output += '</td>';
                     output += '</tr>';
                 });
